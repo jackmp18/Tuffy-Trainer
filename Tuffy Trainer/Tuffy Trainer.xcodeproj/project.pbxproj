@@ -17,6 +17,7 @@
 		F4A970872CFFCECE00BA69AE /* Tuffy_TrainerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A970862CFFCECE00BA69AE /* Tuffy_TrainerUITests.swift */; };
 		F4A970892CFFCECE00BA69AE /* Tuffy_TrainerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A970882CFFCECE00BA69AE /* Tuffy_TrainerUITestsLaunchTests.swift */; };
 		F4A970962CFFCF0600BA69AE /* HomePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A970952CFFCF0600BA69AE /* HomePageView.swift */; };
+		F4A9709C2D064E4E00BA69AE /* NutritionTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A9709B2D064E4E00BA69AE /* NutritionTabView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		F4A970862CFFCECE00BA69AE /* Tuffy_TrainerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tuffy_TrainerUITests.swift; sourceTree = "<group>"; };
 		F4A970882CFFCECE00BA69AE /* Tuffy_TrainerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tuffy_TrainerUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		F4A970952CFFCF0600BA69AE /* HomePageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageView.swift; sourceTree = "<group>"; };
+		F4A9709B2D064E4E00BA69AE /* NutritionTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NutritionTabView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +111,7 @@
 				F4A970702CFFCECE00BA69AE /* LaunchScreen.storyboard */,
 				F4A970732CFFCECE00BA69AE /* Info.plist */,
 				F4A970952CFFCF0600BA69AE /* HomePageView.swift */,
+				F4A9709B2D064E4E00BA69AE /* NutritionTabView.swift */,
 			);
 			path = "Tuffy Trainer";
 			sourceTree = "<group>";
@@ -264,6 +267,7 @@
 				F4A9706A2CFFCECD00BA69AE /* ViewController.swift in Sources */,
 				F4A970662CFFCECD00BA69AE /* AppDelegate.swift in Sources */,
 				F4A970962CFFCF0600BA69AE /* HomePageView.swift in Sources */,
+				F4A9709C2D064E4E00BA69AE /* NutritionTabView.swift in Sources */,
 				F4A970682CFFCECD00BA69AE /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

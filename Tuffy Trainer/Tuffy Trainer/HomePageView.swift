@@ -56,10 +56,10 @@ struct HomePageView: View {
                     Label("Progress", systemImage: "chart.bar.xaxis")
                 }
             
-            Text("Nutrition View")
-                .tabItem {
-                    Label("Nutrition", systemImage: "leaf")
-                }
+            NutritionView()
+                            .tabItem {
+                                Label("Nutrition", systemImage: "leaf")
+                            }
             
             Text("Profile View")
                 .tabItem {
