@@ -51,7 +51,7 @@ struct HomePageView: View {
             }
             
             // Placeholder Tabs
-            Text("Progress View")
+            GoalProgressView()
                 .tabItem {
                     Label("Progress", systemImage: "chart.bar.xaxis")
                 }
