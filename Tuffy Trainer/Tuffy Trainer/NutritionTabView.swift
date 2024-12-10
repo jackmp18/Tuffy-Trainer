@@ -1,179 +1,93 @@
 import SwiftUI
 
-struct NutritionView: View {
-    // Using @AppStorage for persistent storage
-    @AppStorage("dailyCalories") private var dailyCalories: Int = 0
-    @AppStorage("dailyProtein") private var dailyProtein: Int = 0
-    @AppStorage("dailyCarbs") private var dailyCarbs: Int = 0
-    @AppStorage("dailyFats") private var dailyFats: Int = 0
+class NutritionViewModel: ObservableObject {
+    @Published var breakfastItems: [FoodItem] = []
+    @Published var lunchItems: [FoodItem] = []
+    @Published var dinnerItems: [FoodItem] = []
 
-    @AppStorage("breakfastItems") private var breakfastItemsData: Data = Data()
-    @AppStorage("lunchItems") private var lunchItemsData: Data = Data()
-    @AppStorage("dinnerItems") private var dinnerItemsData: Data = Data()
-
-    @State private var breakfastItems: [FoodItem] = []
-    @State private var lunchItems: [FoodItem] = []
-    @State private var dinnerItems: [FoodItem] = []
-
-    @State private var showAddFoodModal: Bool = false
-    @State private var currentSection: String = ""
-
-    init() {
-        loadData()
+    var totalCalories: Int {
+        (breakfastItems + lunchItems + dinnerItems).reduce(0) { $0 + $1.calories }
     }
+
+    var totalProtein: Int {
+        (breakfastItems + lunchItems + dinnerItems).reduce(0) { $0 + $1.protein }
+    }
+
+    var totalCarbs: Int {
+        (breakfastItems + lunchItems + dinnerItems).reduce(0) { $0 + $1.carbs }
+    }
+
+    var totalFats: Int {
+        (breakfastItems + lunchItems + dinnerItems).reduce(0) { $0 + $1.fats }
+    }
+}
+
+struct NutritionView: View {
+    @ObservedObject var viewModel: NutritionViewModel
+    @State private var isAddingFood = false
 
     var body: some View {
         NavigationView {
-            VStack(spacing: 20) {
-                // Centered Title
-                Text("Nutrition")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .padding(.top, 20)
-
-                // Macros Display
-                HStack {
-                    MacroBox(title: "Calories", value: "\(dailyCalories)")
-                    MacroBox(title: "Protein", value: "\(dailyProtein)")
-                    MacroBox(title: "Carbs", value: "\(dailyCarbs)")
-                    MacroBox(title: "Fats", value: "\(dailyFats)")
-                }
-                .padding(.horizontal)
-
-                // Breakfast Section
-                MealSection(
-                    title: "Breakfast",
-                    items: $breakfastItems,
-                    onAddFood: { currentSection = "Breakfast"; showAddFoodModal = true }
-                )
-
-                // Lunch Section
-                MealSection(
-                    title: "Lunch",
-                    items: $lunchItems,
-                    onAddFood: { currentSection = "Lunch"; showAddFoodModal = true }
-                )
-
-                // Dinner Section
-                MealSection(
-                    title: "Dinner",
-                    items: $dinnerItems,
-                    onAddFood: { currentSection = "Dinner"; showAddFoodModal = true }
-                )
-
-                // Reset Button
-                Button(action: resetDailyMacros) {
-                    Text("Reset")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.red)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
-                }
-                .padding(.horizontal)
-                .padding(.bottom, 20)
-            }
-            .sheet(isPresented: $showAddFoodModal) {
-                AddFoodModal(
-                    onAdd: { food in
-                        addFood(food: food)
+            ScrollView {
+                VStack(spacing: 20) {
+                    // Summary Cards
+                    HStack(spacing: 15) {
+                        NutritionCard(title: "Calories", value: viewModel.totalCalories)
+                        NutritionCard(title: "Protein", value: viewModel.totalProtein)
+                        NutritionCard(title: "Carbs", value: viewModel.totalCarbs)
+                        NutritionCard(title: "Fats", value: viewModel.totalFats)
                     }
-                )
+                    .padding(.horizontal)
+
+                    // Meal Sections
+                    MealSection(
+                        title: "Breakfast",
+                        items: $viewModel.breakfastItems,
+                        onAddFood: { isAddingFood = true }
+                    )
+
+                    MealSection(
+                        title: "Lunch",
+                        items: $viewModel.lunchItems,
+                        onAddFood: { isAddingFood = true }
+                    )
+
+                    MealSection(
+                        title: "Dinner",
+                        items: $viewModel.dinnerItems,
+                        onAddFood: { isAddingFood = true }
+                    )
+                }
+                .padding()
             }
-            .navigationBarHidden(true)
-        }
-    }
-
-    private func addFood(food: FoodItem) {
-        switch currentSection {
-        case "Breakfast":
-            breakfastItems.append(food)
-        case "Lunch":
-            lunchItems.append(food)
-        case "Dinner":
-            dinnerItems.append(food)
-        default:
-            break
-        }
-
-        // Update daily macros
-        dailyCalories += food.calories
-        dailyProtein += food.protein
-        dailyCarbs += food.carbs
-        dailyFats += food.fats
-
-        // Save data to UserDefaults
-        saveData()
-    }
-
-    private func resetDailyMacros() {
-        dailyCalories = 0
-        dailyProtein = 0
-        dailyCarbs = 0
-        dailyFats = 0
-
-        breakfastItems.removeAll()
-        lunchItems.removeAll()
-        dinnerItems.removeAll()
-
-        // Save data to UserDefaults
-        saveData()
-    }
-
-    private func saveData() {
-        // Encode and save food items to UserDefaults (as Data)
-        if let breakfastData = try? JSONEncoder().encode(breakfastItems) {
-            breakfastItemsData = breakfastData
-        }
-        if let lunchData = try? JSONEncoder().encode(lunchItems) {
-            lunchItemsData = lunchData
-        }
-        if let dinnerData = try? JSONEncoder().encode(dinnerItems) {
-            dinnerItemsData = dinnerData
-        }
-    }
-
-    private func loadData() {
-        // Decode food items from UserDefaults (Data -> [FoodItem])
-        if let breakfast = try? JSONDecoder().decode([FoodItem].self, from: breakfastItemsData) {
-            breakfastItems = breakfast
-        }
-        if let lunch = try? JSONDecoder().decode([FoodItem].self, from: lunchItemsData) {
-            lunchItems = lunch
-        }
-        if let dinner = try? JSONDecoder().decode([FoodItem].self, from: dinnerItemsData) {
-            dinnerItems = dinner
+            .navigationTitle("Nutrition")
+            .sheet(isPresented: $isAddingFood) {
+                AddFoodModal { newFood in
+                    viewModel.breakfastItems.append(newFood) // Default to Breakfast
+                }
+            }
         }
     }
 }
 
-// Food Item Model
-struct FoodItem: Identifiable, Codable {
-    let id = UUID()
-    let name: String
-    let calories: Int
-    let protein: Int
-    let carbs: Int
-    let fats: Int
-}
-
-// Macro Box Component
-struct MacroBox: View {
+// Nutrition Summary Card Component
+struct NutritionCard: View {
     let title: String
-    let value: String
+    let value: Int
 
     var body: some View {
         VStack {
-            Text(value)
-                .font(.title2)
-                .fontWeight(.bold)
+            Text("\(value)")
+                .font(.headline)
+                .foregroundColor(.purple)
             Text(title)
-                .font(.caption)
+                .font(.subheadline)
+                .foregroundColor(.secondary)
         }
-        .frame(maxWidth: .infinity)
-        .padding()
-        .background(Color(UIColor.systemGray6))
-        .cornerRadius(8)
+        .frame(width: 80, height: 80)
+        .background(Color(.systemGray6))
+        .cornerRadius(10)
+        .shadow(radius: 3)
     }
 }
 
@@ -194,6 +108,14 @@ struct MealSection: View {
                     Text(item.name)
                     Spacer()
                     Text("\(item.calories) kcal")
+                    Button(action: {
+                        if let index = items.firstIndex(where: { $0.id == item.id }) {
+                            items.remove(at: index)
+                        }
+                    }) {
+                        Image(systemName: "trash")
+                            .foregroundColor(.red)
+                    }
                 }
                 .padding(.horizontal)
             }
@@ -210,6 +132,16 @@ struct MealSection: View {
         }
         .padding(.top)
     }
+}
+
+// Food Item Model
+struct FoodItem: Identifiable, Codable {
+    let id = UUID()
+    let name: String
+    let calories: Int
+    let protein: Int
+    let carbs: Int
+    let fats: Int
 }
 
 // Add Food Modal Component
@@ -250,11 +182,5 @@ struct AddFoodModal: View {
             )
             .navigationTitle("Add Food")
         }
-    }
-}
-
-struct NutritionView_Previews: PreviewProvider {
-    static var previews: some View {
-        NutritionView()
     }
 }

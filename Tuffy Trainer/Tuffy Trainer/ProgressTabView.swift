@@ -1,6 +1,6 @@
 import SwiftUI
 
-// widget for the progress
+// Widget for the progress
 struct ProgressWidget: View {
     let title: String
     let progress: Double
@@ -29,22 +29,22 @@ struct ProgressWidget: View {
     }
 }
 
-// main view
+// Main view
 struct GoalProgressView: View {
-    // app storage to store data
-    @AppStorage("dailyCalories") private var dailyCalories: Int = 0
+    @ObservedObject var nutritionViewModel: NutritionViewModel
+
     @AppStorage("dailyCalorieGoal") private var dailyCalorieGoal: Int = 2000
     @AppStorage("currentWeight") private var currentWeight: Double = 0.0
     @AppStorage("weightGoal") private var weightGoal: Double = 70.0
     @AppStorage("startingWeight") private var startingWeight: Double = 75.0
 
-    // progress calculations
+    // Progress calculations
     private var calorieProgress: Double {
-        min(Double(dailyCalories) / Double(dailyCalorieGoal), 1.0)
+        let totalCalories = nutritionViewModel.totalCalories
+        return min(Double(totalCalories) / Double(dailyCalorieGoal), 1.0)
     }
 
     private var weightProgress: Double {
-        // calculate weight progress based on the starting weight
         let weightLoss = startingWeight - currentWeight
         let weightChange = startingWeight - weightGoal
         return max(weightLoss / weightChange, 0.0)
@@ -58,7 +58,7 @@ struct GoalProgressView: View {
                 ProgressWidget(
                     title: "Calorie Progress",
                     progress: calorieProgress,
-                    progressText: "\(dailyCalories)/\(dailyCalorieGoal) kcal",
+                    progressText: "\(nutritionViewModel.totalCalories)/\(dailyCalorieGoal) kcal",
                     barColor: .purple
                 )
                 .frame(height: 150)
@@ -80,7 +80,7 @@ struct GoalProgressView: View {
                     Button("Edit") {
                         isEditingGoals = true
                     }
-                    .foregroundColor(.purple)  // Set the "Edit" button color to purple
+                    .foregroundColor(.purple)
                 }
             }
             .sheet(isPresented: $isEditingGoals) {
@@ -93,7 +93,6 @@ struct GoalProgressView: View {
     }
 }
 
-// editing goals view
 struct EditGoalsView: View {
     @Binding var dailyCalorieGoal: Int
     @Binding var weightGoal: Double
@@ -108,7 +107,7 @@ struct EditGoalsView: View {
             Form {
                 Section(header: Text("Calorie Goal")) {
                     TextField("Enter daily calorie goal", text: $calorieInput)
-                        .keyboardType(.numberPad) // numeric keypad
+                        .keyboardType(.numberPad)
                         .onAppear {
                             calorieInput = String(dailyCalorieGoal)
                         }
@@ -121,7 +120,7 @@ struct EditGoalsView: View {
 
                 Section(header: Text("Weight Goal")) {
                     TextField("Enter weight goal", text: $weightInput)
-                        .keyboardType(.decimalPad) // decimal keypad for weights
+                        .keyboardType(.decimalPad)
                         .onAppear {
                             weightInput = String(format: "%.1f", weightGoal)
                         }
@@ -151,6 +150,6 @@ struct EditGoalsView: View {
 
 struct GoalProgressView_Previews: PreviewProvider {
     static var previews: some View {
-        GoalProgressView()
+        GoalProgressView(nutritionViewModel: NutritionViewModel())
     }
 }

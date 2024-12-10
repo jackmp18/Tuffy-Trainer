@@ -3,11 +3,12 @@ import SwiftUI
 struct ProfileView: View {
     @State private var profileImage: UIImage? = nil
     @State private var showingImagePicker = false
-    
+
     @AppStorage("currentWeight") private var currentWeight: Double = 0.0
     @AppStorage("username") private var username: String = "User"
     @AppStorage("heightCm") private var heightCm: String = "" // Store height as AppStorage
-    
+    @AppStorage("useKilograms") private var useKilograms: Bool = true
+
     @State private var birthday = Date()
     @State private var age: Int? = nil
     @State private var isBirthdayPickerPresented: Bool = false
@@ -54,19 +55,19 @@ struct ProfileView: View {
                 .sheet(isPresented: $showingImagePicker) {
                     ImagePicker(image: $profileImage)
                 }
-                
+
                 // Birthday Input
                 VStack(spacing: 8) {
                     Text("Birthday")
                         .font(.headline)
-                    
+
                     Text(birthdayFormatted())
                         .font(.subheadline)
                         .foregroundColor(.primary)
                         .onTapGesture {
                             isBirthdayPickerPresented = true
                         }
-                    
+
                     if let age = age {
                         Text("Age: \(age) years")
                             .font(.subheadline)
@@ -78,7 +79,7 @@ struct ProfileView: View {
                     VStack(spacing: 20) {
                         Text("Select Your Birthday")
                             .font(.headline)
-                        
+
                         DatePicker(
                             "Select your birthday",
                             selection: $birthday,
@@ -87,7 +88,7 @@ struct ProfileView: View {
                         .datePickerStyle(WheelDatePickerStyle())
                         .labelsHidden()
                         .frame(maxWidth: .infinity)
-                        
+
                         Button(action: {
                             calculateAge()
                             isBirthdayPickerPresented = false
@@ -104,33 +105,36 @@ struct ProfileView: View {
                     }
                     .padding()
                 }
-                
+
                 // Weight Input
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Weight (kg)")
+                    Text("Weight (\(useKilograms ? "kg" : "lb"))")
                         .font(.headline)
-                    
+
                     TextField(
-                        "Enter your weight in kg",
+                        "Enter your weight",
                         value: $currentWeight,
                         formatter: NumberFormatter()
                     )
                     .keyboardType(.decimalPad)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
+
+                    Toggle("Use Kilograms", isOn: $useKilograms)
+                        .padding(.top)
                 }
                 .padding(.horizontal)
-                
+
                 // Height Input
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Height (cm)")
                         .font(.headline)
-                    
+
                     TextField("Enter your height in cm", text: $heightCm)
                         .keyboardType(.numberPad)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                 }
                 .padding(.horizontal)
-                
+
                 Spacer()
             }
             .onAppear {
@@ -139,21 +143,20 @@ struct ProfileView: View {
             .navigationTitle("Profile")
         }
     }
-    
+
     private func calculateAge() {
         let calendar = Calendar.current
         let now = Date()
         let ageComponents = calendar.dateComponents([.year], from: birthday, to: now)
         age = ageComponents.year
     }
-    
+
     private func birthdayFormatted() -> String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
         return formatter.string(from: birthday)
     }
 }
-
 
 // Image Picker Implementation
 struct ImagePicker: UIViewControllerRepresentable {
