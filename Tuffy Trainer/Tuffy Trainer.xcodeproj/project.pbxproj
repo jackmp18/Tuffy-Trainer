@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		424542082D07771D00291E42 /* ProgressTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424542072D07771D00291E42 /* ProgressTabView.swift */; };
+		4245420E2D0779A200291E42 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4245420D2D0779A200291E42 /* ProfileView.swift */; };
 		F4A970662CFFCECD00BA69AE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A970652CFFCECD00BA69AE /* AppDelegate.swift */; };
 		F4A970682CFFCECD00BA69AE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A970672CFFCECD00BA69AE /* SceneDelegate.swift */; };
 		F4A9706A2CFFCECD00BA69AE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A970692CFFCECD00BA69AE /* ViewController.swift */; };
@@ -38,6 +40,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		424542072D07771D00291E42 /* ProgressTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressTabView.swift; sourceTree = "<group>"; };
+		4245420D2D0779A200291E42 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		F4A970622CFFCECD00BA69AE /* Tuffy Trainer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tuffy Trainer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4A970652CFFCECD00BA69AE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F4A970672CFFCECD00BA69AE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -112,6 +116,8 @@
 				F4A970732CFFCECE00BA69AE /* Info.plist */,
 				F4A970952CFFCF0600BA69AE /* HomePageView.swift */,
 				F4A9709B2D064E4E00BA69AE /* NutritionTabView.swift */,
+				424542072D07771D00291E42 /* ProgressTabView.swift */,
+				4245420D2D0779A200291E42 /* ProfileView.swift */,
 			);
 			path = "Tuffy Trainer";
 			sourceTree = "<group>";
@@ -265,9 +271,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				F4A9706A2CFFCECD00BA69AE /* ViewController.swift in Sources */,
+				424542082D07771D00291E42 /* ProgressTabView.swift in Sources */,
 				F4A970662CFFCECD00BA69AE /* AppDelegate.swift in Sources */,
 				F4A970962CFFCF0600BA69AE /* HomePageView.swift in Sources */,
 				F4A9709C2D064E4E00BA69AE /* NutritionTabView.swift in Sources */,
+				4245420E2D0779A200291E42 /* ProfileView.swift in Sources */,
 				F4A970682CFFCECD00BA69AE /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

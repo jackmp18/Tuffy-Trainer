@@ -61,7 +61,8 @@ struct HomePageView: View {
                                 Label("Nutrition", systemImage: "leaf")
                             }
             
-            Text("Profile View")
+            // Profile Tab
+            ProfileView()
                 .tabItem {
                     Label("Profile", systemImage: "person.crop.circle")
                 }
