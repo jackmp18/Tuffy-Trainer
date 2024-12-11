@@ -8,6 +8,11 @@ struct HomePageView: View {
 
     @StateObject private var nutritionViewModel = NutritionViewModel()
 
+    @AppStorage("dailySleepLog") private var dailySleepLogData: Data = Data()
+    private var dailySleepLog: [SleepEntry] {
+        (try? JSONDecoder().decode([SleepEntry].self, from: dailySleepLogData)) ?? []
+    }
+
     var body: some View {
         TabView {
             // Home Tab
@@ -49,6 +54,15 @@ struct HomePageView: View {
                             metrics: [
                                 ("Weight", "\(String(format: "%.1f", currentWeight)) \(useKilograms ? "kg" : "lb")", "scalemass"),
                                 ("Height", "\(heightCm.isEmpty ? "N/A" : "\(heightCm) cm")", "arrow.up.arrow.down")
+                            ]
+                        )
+                        .frame(height: 150)
+
+                        ProgressCard(
+                            title: "Sleep",
+                            metrics: [
+                                ("Last Entry", dailySleepLog.last?.date ?? "No Data", "bed.double.fill"),
+                                ("Hours", "\(String(format: "%.1f", dailySleepLog.last?.hoursSlept ?? 0.0)) hours", "clock.fill")
                             ]
                         )
                         .frame(height: 150)
