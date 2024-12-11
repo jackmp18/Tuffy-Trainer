@@ -87,17 +87,19 @@ struct HomePageView: View {
                 .tabItem {
                     Label("Progress", systemImage: "chart.bar.xaxis")
                 }
+            
+            // Sleep Tab
+            SleepTabView()
+                .tabItem {
+                    Label("Sleep", systemImage: "bed.double.fill")
+                }
 
             ProfileView()
                 .tabItem {
                     Label("Profile", systemImage: "person.crop.circle")
                 }
 
-            // Sleep Tab
-            SleepTabView()
-                .tabItem {
-                    Label("Sleep", systemImage: "bed.double.fill")
-                }
+            
         }
     }
 }
