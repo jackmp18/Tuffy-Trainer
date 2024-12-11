@@ -1,5 +1,20 @@
 import SwiftUI
 
+// MARK: - Models and ViewModels
+
+struct FoodItem: Identifiable, Codable {
+    let id = UUID()
+    let name: String
+    let calories: Int
+    let protein: Int
+    let carbs: Int
+    let fats: Int
+}
+
+enum MealType {
+    case breakfast, lunch, dinner
+}
+
 class NutritionViewModel: ObservableObject {
     @Published var breakfastItems: [FoodItem] = []
     @Published var lunchItems: [FoodItem] = []
@@ -22,9 +37,12 @@ class NutritionViewModel: ObservableObject {
     }
 }
 
+// MARK: - Views
+
 struct NutritionView: View {
     @ObservedObject var viewModel: NutritionViewModel
     @State private var isAddingFood = false
+    @State private var selectedMeal: MealType? = nil
 
     var body: some View {
         NavigationView {
@@ -43,19 +61,28 @@ struct NutritionView: View {
                     MealSection(
                         title: "Breakfast",
                         items: $viewModel.breakfastItems,
-                        onAddFood: { isAddingFood = true }
+                        onAddFood: {
+                            selectedMeal = .breakfast
+                            isAddingFood = true
+                        }
                     )
 
                     MealSection(
                         title: "Lunch",
                         items: $viewModel.lunchItems,
-                        onAddFood: { isAddingFood = true }
+                        onAddFood: {
+                            selectedMeal = .lunch
+                            isAddingFood = true
+                        }
                     )
 
                     MealSection(
                         title: "Dinner",
                         items: $viewModel.dinnerItems,
-                        onAddFood: { isAddingFood = true }
+                        onAddFood: {
+                            selectedMeal = .dinner
+                            isAddingFood = true
+                        }
                     )
                 }
                 .padding()
@@ -63,14 +90,22 @@ struct NutritionView: View {
             .navigationTitle("Nutrition")
             .sheet(isPresented: $isAddingFood) {
                 AddFoodModal { newFood in
-                    viewModel.breakfastItems.append(newFood) // Default to Breakfast
+                    if let meal = selectedMeal {
+                        switch meal {
+                        case .breakfast:
+                            viewModel.breakfastItems.append(newFood)
+                        case .lunch:
+                            viewModel.lunchItems.append(newFood)
+                        case .dinner:
+                            viewModel.dinnerItems.append(newFood)
+                        }
+                    }
                 }
             }
         }
     }
 }
 
-// Nutrition Summary Card Component
 struct NutritionCard: View {
     let title: String
     let value: Int
@@ -91,7 +126,6 @@ struct NutritionCard: View {
     }
 }
 
-// Meal Section Component
 struct MealSection: View {
     let title: String
     @Binding var items: [FoodItem]
@@ -134,17 +168,6 @@ struct MealSection: View {
     }
 }
 
-// Food Item Model
-struct FoodItem: Identifiable, Codable {
-    let id = UUID()
-    let name: String
-    let calories: Int
-    let protein: Int
-    let carbs: Int
-    let fats: Int
-}
-
-// Add Food Modal Component
 struct AddFoodModal: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var name: String = ""
@@ -182,5 +205,12 @@ struct AddFoodModal: View {
             )
             .navigationTitle("Add Food")
         }
+    }
+}
+
+// Preview
+struct NutritionView_Previews: PreviewProvider {
+    static var previews: some View {
+        NutritionView(viewModel: NutritionViewModel())
     }
 }

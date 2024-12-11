@@ -82,24 +82,29 @@ struct HomePageView: View {
                     Label("Nutrition", systemImage: "leaf")
                 }
 
-            // Placeholder Tabs
+            // Progress Tab
             GoalProgressView(nutritionViewModel: nutritionViewModel)
                 .tabItem {
                     Label("Progress", systemImage: "chart.bar.xaxis")
                 }
-            
+
             // Sleep Tab
             SleepTabView()
                 .tabItem {
                     Label("Sleep", systemImage: "bed.double.fill")
                 }
 
+            // Leaderboard Tab
+            LeaderboardView()
+                .tabItem {
+                    Label("Leaderboard", systemImage: "list.number")
+                }
+
+            // Profile Tab
             ProfileView()
                 .tabItem {
                     Label("Profile", systemImage: "person.crop.circle")
                 }
-
-            
         }
     }
 }
@@ -116,7 +121,7 @@ struct ProgressCard: View {
                 .fontWeight(.semibold)
                 .foregroundColor(.black)
 
-            ForEach(metrics, id: \ .0) { metric in
+            ForEach(metrics, id: \.0) { metric in
                 HStack {
                     Image(systemName: metric.2)
                         .foregroundColor(.purple)
