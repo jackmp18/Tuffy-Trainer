@@ -78,6 +78,12 @@ struct HomePageView: View {
                 .tabItem {
                     Label("Profile", systemImage: "person.crop.circle")
                 }
+
+            // Sleep Tab
+            SleepTabView()
+                .tabItem {
+                    Label("Sleep", systemImage: "bed.double.fill")
+                }
         }
     }
 }
@@ -94,7 +100,7 @@ struct ProgressCard: View {
                 .fontWeight(.semibold)
                 .foregroundColor(.black)
 
-            ForEach(metrics, id: \.0) { metric in
+            ForEach(metrics, id: \ .0) { metric in
                 HStack {
                     Image(systemName: metric.2)
                         .foregroundColor(.purple)
